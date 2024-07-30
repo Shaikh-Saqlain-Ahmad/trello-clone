@@ -1,40 +1,45 @@
-import { authMiddleware, clerkMiddleware, createRouteMatcher, redirectToSignIn } from "@clerk/nextjs/server";
+import { authMiddleware, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+// Define protected routes
 const isProtectedRoute = createRouteMatcher([
-    // add protected routes here
-    
-  ]);
-  // export default clerkMiddleware((auth, req) => {
-  //   if (isProtectedRoute(req)) auth().protect();
-   
-  // });
-  export default authMiddleware({
-    publicRoutes:['/'],
-    afterAuth(auth,req){
-      if(auth.userId && auth.isPublicRoute){
-        let path=`/organization/${auth.orgId}`;
-        if(auth.orgId){
-          path=`/organinzation/${auth.orgId}`
-  
-        }
-        const orgSelection=new URL(path,req.url)
-        return NextResponse.redirect(orgSelection)
-      }
-      if(!auth.userId && !auth.isPublicRoute){
-        return redirectToSignIn({returnBackUrl:req.url})
+  "/select-org",
+  "/organization/:orgId*"
+]);
 
-      }
-      if(auth.userId && auth.isPublicRoute && req.nextUrl.pathname!=="/select-org"){
-        const orgSelection=new URL("/select-org",req.url);
-        return NextResponse.redirect(orgSelection)
-      }
-      
+export default clerkMiddleware((auth, req) => {
+  const { userId, orgId } = auth();
+
+  // Redirect to sign-in if the user is not authenticated and the route is protected
+  if (!userId && isProtectedRoute(req)) {
+    return auth().redirectToSignIn({ returnBackUrl: req.url });
+  }
+
+  // Redirect to select organization page if the user is authenticated but has no organization selected
+  if (userId && !orgId && req.nextUrl.pathname !== "/select-org") {
+    const orgSelection = new URL("/select-org", req.url);
+    return NextResponse.redirect(orgSelection);
+  }
+
+  // Redirect to organization page if the user has selected an organization
+  if (userId && orgId && req.nextUrl.pathname === "/select-org") {
+    const orgPage = new URL(`/organization/${orgId}`, req.url);
+    return NextResponse.redirect(orgPage);
+  }
+  if(userId && !isProtectedRoute(req)){
+    let path ='select/org';
+    if(orgId){
+      path=`/organization/${orgId}`;
+      const orgSelection=new URL(path,req.url);
+      return NextResponse.redirect(orgSelection)
     }
+  }
 
-  })
-// export default clerkMiddleware();
+  // Continue with the request if none of the above conditions are met
+  return NextResponse.next();
+});
 
+// Export matcher configuration
 export const config = {
   matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
 };
