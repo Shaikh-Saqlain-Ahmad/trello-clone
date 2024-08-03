@@ -22,10 +22,12 @@ export default clerkMiddleware((auth, req) => {
   }
 
   // Redirect to organization page if the user has selected an organization
-  if (userId && orgId && req.nextUrl.pathname === "/select-org") {
+  if (userId && orgId && req.nextUrl.pathname  === "/select-org" && req.url===`/organization/${orgId}`) {
     const orgPage = new URL(`/organization/${orgId}`, req.url);
     return NextResponse.redirect(orgPage);
   }
+  
+
   if(userId && !isProtectedRoute(req)){
     let path ='select/org';
     if(orgId){

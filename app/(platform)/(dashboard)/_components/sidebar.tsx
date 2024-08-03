@@ -6,8 +6,8 @@ import { useOrganization,useOrganizationList } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Accordion } from '@/components/ui/accordion'
-import { Island_Moments } from 'next/font/google'
 import { Skeleton } from '@/components/ui/skeleton'
+import { NavItem } from './navbar-item'
 interface SideBarProps{
     storageKey?:string
 }
@@ -53,6 +53,20 @@ export const SideBar=({
                 </Link>
             </Button>
         </div>
+        <Accordion type='multiple'defaultValue={defaultAccrodionValue}className='space-y-2'>
+            {userMemberships.data.map(({organization})=>(
+               <NavItem
+               key={organization.id}
+               isActive={activeOrganization?.id===organization.id}
+               organization={organization}
+               isExpanded={expanded[organization.id]}
+               onExpand={onExpand}
+               >
+                
+               </NavItem>
+            ))}
+
+        </Accordion>
         </>
     )
 }
