@@ -2,10 +2,11 @@
 
 import { createBoard } from "@/actions/board/index"
 
-import { FormInput } from "./form-input";
 
-import { FormButton } from "./form-button";
+
+import { FormSubmit } from "@/components/form/form-submit";
 import { useAction } from "@/hooks/use-actions";
+import { FormInput } from "@/components/form/form-input";
 
 export const Form=()=>{
     const {execute,fieldErrors}=useAction(createBoard,{
@@ -24,9 +25,11 @@ export const Form=()=>{
     return(
         <form action={onSubmit}>
            <div className="flex flex-col space-y-2">
-          <FormInput errors={fieldErrors}/>
+          <FormInput errors={fieldErrors} id={"title"} label="Board Title"/>
            </div>
-            <FormButton/>
+           <FormSubmit>
+            Save
+           </FormSubmit>
         </form>
     )
 }
