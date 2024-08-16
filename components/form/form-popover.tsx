@@ -24,14 +24,16 @@ export const FormPopover=({
     sideOffset=0
 }:FormPopoverProps)=>{
     const router=useRouter();
-    const closeRef=useRef<ElementRef<"button">>(null)
+    const closeRef=useRef<ElementRef<"button">>(null);
     const {execute,fieldErrors}=useAction(
         createBoard,{
-            onSuccess(data) {
-                console.log({data})
+            onSuccess:(data)=> {
+        
                 toast.success("Board Created");
                 closeRef.current?.click();
-                router.push(`/board/${data.id}`);
+               router.push(`/board/${data.id}`);
+              
+                
             },
             onError(error) {
                 console.log("yeh msla hai"+{error});
