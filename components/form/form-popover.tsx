@@ -5,7 +5,7 @@ import { FormInput } from "./form-input";
 import { FormSubmit } from "./form-submit";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
-import { createBoard } from "@/actions/board";
+import { createBoard } from "@/actions/createBoard";
 import { toast } from "sonner";
 import { FormPicker } from "./form-picker";
 import { ElementRef, useRef } from "react";
