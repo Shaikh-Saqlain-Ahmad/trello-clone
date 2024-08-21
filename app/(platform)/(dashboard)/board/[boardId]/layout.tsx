@@ -51,14 +51,14 @@ params:{boardId:string}
         notFound();
     }
     return(
-        <div style={{backgroundImage:`url(${board.imageFullUrl})`}}
-        className="relative h-full bg-no-repeat bg-cover bg-center">
-            <BoardNavbar data={board}/>
-            <div className="relative pt-28 h-full"/>
-            <main className="relative pt-28 h-full">
+       <div className="relative h-full bg-no-repeat bg-cover bg-center"
+       style={{backgroundImage:`url(${board.imageFullUrl})`}}
+       >
+        <BoardNavbar data={board}/>
+        <main className="relative pt-28 h-full">
             {children}
-            </main>
-        </div>
+        </main>
+       </div>
     )
 }
 export default BoardIdLayout;
